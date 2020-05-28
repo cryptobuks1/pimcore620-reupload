@@ -1,0 +1,75 @@
+<?php
+/**
+ * Pimcore
+ *
+ * This source file is available under two different licenses:
+ * - GNU General Public License version 3 (GPLv3)
+ * - Pimcore Enterprise License (PEL)
+ * Full copyright and license information is available in
+ * LICENSE.md which is distributed with this source code.
+ *
+ * @category   Pimcore
+ * @package    Translation
+ *
+ * @copyright  Copyright (c) Pimcore GmbH (http://www.pimcore.org)
+ * @license    http://www.pimcore.org/license     GPLv3 and PEL
+ */
+
+namespace Pimcore\Model\Translation\AbstractTranslation;
+
+use Pimcore\Model;
+
+/**
+ * @method \Pimcore\Model\Translation\AbstractTranslation\Listing\Dao getDao()
+ * @method Model\Translation\AbstractTranslation[] load()
+ */
+class Listing extends Model\Listing\AbstractListing
+{
+    /** @var int maximum number of cacheable items */
+    protected static $cacheLimit = 5000;
+
+    /**
+     * @var array|null
+     */
+    protected $translations = null;
+
+    /**
+     * @return \Pimcore\Model\Translation\AbstractTranslation[]
+     */
+    public function getTranslations()
+    {
+        if ($this->translations === null) {
+            $this->getDao()->load();
+        }
+
+        return $this->translations;
+    }
+
+    /**
+     * @param array $translations
+     *
+     * @return $this
+     */
+    public function setTranslations($translations)
+    {
+        $this->translations = $translations;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public static function getCacheLimit()
+    {
+        return self::$cacheLimit;
+    }
+
+    /**
+     * @param int $cacheLimit
+     */
+    public static function setCacheLimit($cacheLimit)
+    {
+        self::$cacheLimit = $cacheLimit;
+    }
+}
